@@ -50,7 +50,7 @@ def login(email: str = Form(...), password: str = Form(...), db: Session = Depen
         # 登录成功
         return {"message": "Login successful", "user_id": user.id, "email": user.email}
 
-@user_router.post("/add_user")
+@user_router.post("/signup")
 def add_user(user_data: UserCreate, db: Session = Depends(get_db)):
     # 检查用户是否已存在（通过 email）
     existing_user = db.query(User).filter(User.email == user_data.email).first()
