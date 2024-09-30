@@ -38,19 +38,17 @@ def get_user(username: str, db: Session = Depends(get_db)):
     return {"user_id": user.id, "username": user.username, "email": user.email}
 
 @user_router.post("/login")
-def login(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == username).first()
+def login(email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == email).first()
     if user is None:
         # 用户不存在
         raise HTTPException(status_code=404, detail="User not found")
-        # 先进行明文比较，之后再视情况启用哈希比较 
-    elif (password is None) or(user.password != password):
+    elif (password is None) or (user.password != password):
         # 密码不匹配
         raise HTTPException(status_code=401, detail="Incorrect password")
     else:
         # 登录成功
-        return {"message": "Login successful", "user_id": user.id, "username": user.username}
-
+        return {"message": "Login successful", "user_id": user.id, "email": user.email}
 
 @user_router.post("/add_user")
 def add_user(user_data: UserCreate, db: Session = Depends(get_db)):
