@@ -5,12 +5,16 @@ from app.database import engine, get_db
 from app.models import user
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.user_service import user_router  # 导入用户相关的 router
-
+from app.config.log import setup_logger
+from app.dependecies.logging_middleware import logging_dependency
 # 创建数据库表
 user.Base.metadata.create_all(bind=engine)
 
+logger = setup_logger()
 
 app = FastAPI()
+app.middleware("http")(logging_dependency)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins
