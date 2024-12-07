@@ -1,0 +1,6 @@
+2024-12-07 08:18:09 - INFO - Request started - Method: DELETE Path: /users/09683a52-857b-4549-9798-7d7ca4eca5e6
+2024-12-07 08:18:09 - INFO - Request completed - Method: DELETE Path: /users/09683a52-857b-4549-9798-7d7ca4eca5e6 Status: 422 Duration: 4.87ms
+2024-12-07 08:19:57 - INFO - Request started - Method: DELETE Path: /users/09683a52-857b-4549-9798-7d7ca4eca5e6
+2024-12-07 08:19:57 - INFO - Request completed - Method: DELETE Path: /users/09683a52-857b-4549-9798-7d7ca4eca5e6 Status: 200 Duration: 23.14ms
+2024-12-07 08:56:48 - INFO - Request started - Method: POST Path: /users/signup
+2024-12-07 08:56:49 - INFO - Request completed - Method: POST Path: /users/signup Status: 200 Duration: 961.23ms

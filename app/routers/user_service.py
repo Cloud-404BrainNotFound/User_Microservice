@@ -6,7 +6,11 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import datetime
+from uuid import UUID
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import enum
+import smtplib
 
 
 user_router = APIRouter()
@@ -72,5 +76,65 @@ def add_user(user_data: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)  # 刷新以获取新用户的完整信息
+    try:
+        send_signup_email_gmail(new_user.email, new_user.username)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send signup email: {str(e)}")
 
     return {"message": "User created successfully", "user_id": new_user.id, "username": new_user.username, "email": new_user.email}
+@user_router.put("/{user_id}")
+def update_user(user_id: int, user_data: UserCreate, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == str(user_id)).first()  # 将 UUID 转为字符串匹配数据库
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.username = user_data.username or user.username
+    user.email = user_data.email or user.email
+    user.role = user_data.role or user.role
+    user.updated_at = datetime.now()
+
+    db.commit()
+    db.refresh(user)
+
+    return {"message": "User updated successfully", "user": user}
+
+@user_router.delete("/{user_id}")
+def delete_user(user_id: UUID, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.id == str(user_id)).first()  # 将 UUID 转为字符串匹配数据库
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+
+def send_signup_email_gmail(recipient_email: str, username: str):
+    sender_email = "zhngyiyan@gmail.com"
+    sender_password = "btzl rxxu opoe cwoh"
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+
+    # 创建邮件内容
+    subject = "Welcome to Our Service!"
+    body = f"""
+    Hi {username},
+
+    Thank you for signing up for our service! We're excited to have you on board.
+
+    Best regards,
+    The Team
+    """
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = recipient_email
+    message["Subject"] = subject
+    message.attach(MIMEText(body, "plain"))
+
+    # 连接到 SMTP 服务器并发送邮件
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()  # 启用 TLS 加密
+            server.login(sender_email, sender_password)  # 登录到 SMTP 服务器
+            server.sendmail(sender_email, recipient_email, message.as_string())  # 发送邮件
+        print(f"Email successfully sent to {recipient_email}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
