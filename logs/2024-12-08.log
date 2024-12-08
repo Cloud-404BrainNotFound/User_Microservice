@@ -1,0 +1,61 @@
+2024-12-08 13:58:26 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 13:58:55 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 13:58:55 - INFO - Request completed - Method: POST Path: /users/login/email Status: 404 Duration: 7.75ms
+2024-12-08 14:02:52 - INFO - Request started - Method: POST Path: /users/signup
+2024-12-08 14:02:53 - INFO - Request completed - Method: POST Path: /users/signup Status: 200 Duration: 1370.46ms
+2024-12-08 14:03:16 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:16 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 4.12ms
+2024-12-08 14:03:21 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:21 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 3.04ms
+2024-12-08 14:03:52 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:52 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 6.59ms
+2024-12-08 14:03:52 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:52 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 2.14ms
+2024-12-08 14:03:53 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:53 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 2.18ms
+2024-12-08 14:03:54 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:03:54 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 2.36ms
+2024-12-08 14:04:23 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:13:04 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:04 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 8.57ms
+2024-12-08 14:13:05 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:05 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 2.72ms
+2024-12-08 14:13:29 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:29 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 10.09ms
+2024-12-08 14:13:43 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:43 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 4.59ms
+2024-12-08 14:13:44 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:44 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 3.88ms
+2024-12-08 14:13:45 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:13:45 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 4.76ms
+2024-12-08 14:16:21 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:16:21 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 9.82ms
+2024-12-08 14:20:52 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:20:52 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 19.43ms
+2024-12-08 14:21:00 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:21:00 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 5.03ms
+2024-12-08 14:21:15 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:21:15 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 4.33ms
+2024-12-08 14:21:27 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:21:27 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 4.46ms
+2024-12-08 14:25:17 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:25:36 - INFO - Request started - Method: POST Path: /users/signup
+2024-12-08 14:25:36 - INFO - Request completed - Method: POST Path: /users/signup Status: 400 Duration: 10.50ms
+2024-12-08 14:25:49 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:28:10 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:28:10 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:30:58 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:31:29 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:38:24 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:38:48 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:48:02 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-08 14:48:02 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 12.37ms
+2024-12-08 14:53:08 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:53:08 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 89.29ms
+2024-12-08 14:53:14 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:53:19 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:53:19 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 57.71ms
+2024-12-08 14:53:28 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:54:08 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:57:07 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-08 14:57:09 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 1511.49ms

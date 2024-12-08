@@ -5,7 +5,7 @@ from app.database import get_db
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 from uuid import UUID
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -70,8 +70,13 @@ def login(email: str = Form(...), password: str = Form(...), db: Session = Depen
         # 密码不匹配
         raise HTTPException(status_code=401, detail="Incorrect password")
     else:
+        access_token = create_access_token(user)
         # 登录成功
-        return {"message": "Login successful", "user_id": user.id, "email": user.email}
+        return {
+            "message": "Login successful", 
+            "access_token": access_token,
+            "user_id": user.id, 
+            "email": user.email}
 
 @user_router.post("/login/google")
 async def google_login(credentials: dict, db: Session = Depends(get_db)):
@@ -96,7 +101,7 @@ async def google_login(credentials: dict, db: Session = Depends(get_db)):
             new_user = User(
                 username=idinfo.get('name', email.split('@')[0]),
                 email=email,
-                password=None,  # Google登录的用户不需要密码
+                password="GOOGLE_AUTH",  # Google登录的用户不需要密码 但因为数据库不允许密码为null 创建一个默认密码标记
                 role=UserRole.CUSTOMER.value,  # 默认为客户角色
                 created_at=datetime.now(),
                 updated_at=datetime.now()
@@ -115,7 +120,7 @@ async def google_login(credentials: dict, db: Session = Depends(get_db)):
         # 创建访问令牌
         access_token = create_access_token(user)
         return {
-            "message": "Google login successful",
+            "message": "Login successful",
             "user_id": user.id,
             "email": user.email,
             "access_token": access_token,
@@ -159,10 +164,14 @@ def create_access_token(user: User) -> str:
     expires_delta = timedelta(minutes=JWT_EXPIRE_MINUTES)
     expire = datetime.utcnow() + expires_delta
     
+    user_role = user.role
+    if hasattr(user_role, 'value'):  # 如果是枚举类型
+        user_role = user_role.value
+
     to_encode = {
         "sub": str(user.id),
         "email": user.email,
-        "role": user.role,
+        "role": user_role,
         "exp": expire
     }
     

@@ -8,7 +8,7 @@ import enum
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-DATABASE_URL = f"mysql://{config['database']['username']}:{config['database']['password']}@{config['database']['host']}:{config['database']['port']}/{config['database']['database']}"
+DATABASE_URL = f"mysql+mysqldb://{config['database']['username']}:{config['database']['password']}@{config['database']['host']}:{config['database']['port']}/{config['database']['database']}"
 
 engine = create_engine(DATABASE_URL)
 
