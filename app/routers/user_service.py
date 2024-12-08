@@ -5,16 +5,32 @@ from app.database import get_db
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timedelta 
 from uuid import UUID
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import enum
 import smtplib
+from google.oauth2 import id_token
+from google.auth.transport import requests
+import jwt
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 user_router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
+JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', '30'))
+SMTP_SERVER = os.getenv('SMTP_SERVER')
+SMTP_PORT = int(os.getenv('SMTP_PORT', '587'))
+SENDER_EMAIL = os.getenv('SENDER_EMAIL')
+SENDER_PASSWORD = os.getenv('SENDER_PASSWORD')
+
 class UserRole(enum.Enum):
     CUSTOMER = "customer"
     MERCHANT = "merchant"
@@ -25,6 +41,9 @@ class UserCreate(BaseModel):
     password: str
     role: str
     store_id: Optional[str] = None
+
+class GoogleToken(BaseModel):
+    google_token: str
 
 @user_router.get("/first_user")
 def get_first_user_id(db: Session = Depends(get_db)):
@@ -41,7 +60,7 @@ def get_user(username: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return {"user_id": user.id, "username": user.username, "email": user.email}
 
-@user_router.post("/login")
+@user_router.post("/login/email")
 def login(email: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == email).first()
     if user is None:
@@ -53,6 +72,58 @@ def login(email: str = Form(...), password: str = Form(...), db: Session = Depen
     else:
         # 登录成功
         return {"message": "Login successful", "user_id": user.id, "email": user.email}
+
+@user_router.post("/login/google")
+async def google_login(credentials: dict, db: Session = Depends(get_db)):
+    try:
+        # 验证Google Token
+        token = credentials.get('google_token')
+        if not token:
+            raise HTTPException(status_code=400, detail="Missing google_token")
+            
+        idinfo = id_token.verify_oauth2_token(
+            token,
+            requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+        
+        email = idinfo['email']
+        # 检查用户是否存在
+        user = db.query(User).filter(User.email == email).first()
+        
+        if not user:
+            # 如果用户不存在，创建新用户
+            new_user = User(
+                username=idinfo.get('name', email.split('@')[0]),
+                email=email,
+                password=None,  # Google登录的用户不需要密码
+                role=UserRole.CUSTOMER.value,  # 默认为客户角色
+                created_at=datetime.now(),
+                updated_at=datetime.now()
+            )
+            db.add(new_user)
+            db.commit()
+            db.refresh(new_user)
+            user = new_user
+            
+            # 发送欢迎邮件
+            try:
+                send_signup_email_gmail(user.email, user.username)
+            except Exception as e:
+                print(f"Failed to send welcome email: {e}")
+        
+        # 创建访问令牌
+        access_token = create_access_token(user)
+        return {
+            "message": "Google login successful",
+            "user_id": user.id,
+            "email": user.email,
+            "access_token": access_token,
+            "token_type": "bearer"
+        }
+        
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail=f"Invalid Google token: {str(e)}")
 
 @user_router.post("/signup")
 def add_user(user_data: UserCreate, db: Session = Depends(get_db)):
@@ -82,6 +153,47 @@ def add_user(user_data: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Failed to send signup email: {str(e)}")
 
     return {"message": "User created successfully", "user_id": new_user.id, "username": new_user.username, "email": new_user.email}
+
+def create_access_token(user: User) -> str:
+    """创建JWT访问令牌"""
+    expires_delta = timedelta(minutes=JWT_EXPIRE_MINUTES)
+    expire = datetime.utcnow() + expires_delta
+    
+    to_encode = {
+        "sub": str(user.id),
+        "email": user.email,
+        "role": user.role,
+        "exp": expire
+    }
+    
+    return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+def send_signup_email_gmail(recipient_email: str, username: str):
+    message = MIMEMultipart()
+    message["From"] = SENDER_EMAIL
+    message["To"] = recipient_email
+    message["Subject"] = "Welcome to Our Service!"
+    
+    body = f"""
+    Hi {username},
+
+    Thank you for signing up for our service! We're excited to have you on board.
+
+    Best regards,
+    The Team
+    """
+    message.attach(MIMEText(body, "plain"))
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, recipient_email, message.as_string())
+        print(f"Email successfully sent to {recipient_email}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        raise e
+    
 @user_router.put("/{user_id}")
 def update_user(user_id: int, user_data: UserCreate, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == str(user_id)).first()  # 将 UUID 转为字符串匹配数据库
@@ -106,35 +218,3 @@ def delete_user(user_id: UUID, db: Session = Depends(get_db)):
     db.delete(user)
     db.commit()
     return {"message": "User deleted successfully"}
-
-def send_signup_email_gmail(recipient_email: str, username: str):
-    sender_email = "zhngyiyan@gmail.com"
-    sender_password = "btzl rxxu opoe cwoh"
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-
-    # 创建邮件内容
-    subject = "Welcome to Our Service!"
-    body = f"""
-    Hi {username},
-
-    Thank you for signing up for our service! We're excited to have you on board.
-
-    Best regards,
-    The Team
-    """
-    message = MIMEMultipart()
-    message["From"] = sender_email
-    message["To"] = recipient_email
-    message["Subject"] = subject
-    message.attach(MIMEText(body, "plain"))
-
-    # 连接到 SMTP 服务器并发送邮件
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()  # 启用 TLS 加密
-            server.login(sender_email, sender_password)  # 登录到 SMTP 服务器
-            server.sendmail(sender_email, recipient_email, message.as_string())  # 发送邮件
-        print(f"Email successfully sent to {recipient_email}")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
