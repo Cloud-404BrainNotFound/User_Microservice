@@ -1,0 +1,20 @@
+2024-12-09 15:27:08 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-09 15:27:08 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 11.52ms
+2024-12-09 16:04:25 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-09 16:04:25 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 9.11ms
+2024-12-09 16:14:11 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-09 16:14:11 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 5.66ms
+2024-12-09 16:34:21 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-09 16:34:21 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 9.01ms
+2024-12-09 16:36:23 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 16:36:23 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 238.43ms
+2024-12-09 16:38:55 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 16:38:55 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 103.96ms
+2024-12-09 16:39:38 - INFO - Request started - Method: POST Path: /users/login/email
+2024-12-09 16:39:38 - INFO - Request completed - Method: POST Path: /users/login/email Status: 200 Duration: 10.44ms
+2024-12-09 16:41:05 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 16:41:05 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 373.03ms
+2024-12-09 18:15:39 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 18:15:39 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 230.73ms
+2024-12-09 18:24:57 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 18:24:58 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 953.12ms
