@@ -178,11 +178,13 @@ def create_access_token(user: User) -> str:
     return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
 
 def send_signup_email_gmail(recipient_email: str, username: str):
-    message = MIMEMultipart()
-    message["From"] = SENDER_EMAIL
-    message["To"] = recipient_email
-    message["Subject"] = "Welcome to Our Service!"
-    
+    sender_email = "zhngyiyan@gmail.com"
+    sender_password = "btzl rxxu opoe cwoh"
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+
+    # 创建邮件内容
+    subject = "Welcome to Our Service!"
     body = f"""
     Hi {username},
 
@@ -191,17 +193,21 @@ def send_signup_email_gmail(recipient_email: str, username: str):
     Best regards,
     The Team
     """
+    message = MIMEMultipart()
+    message["From"] = sender_email
+    message["To"] = recipient_email
+    message["Subject"] = subject
     message.attach(MIMEText(body, "plain"))
 
+    # 连接到 SMTP 服务器并发送邮件
     try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.sendmail(SENDER_EMAIL, recipient_email, message.as_string())
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()  # 启用 TLS 加密
+            server.login(sender_email, sender_password)  # 登录到 SMTP 服务器
+            server.sendmail(sender_email, recipient_email, message.as_string())  # 发送邮件
         print(f"Email successfully sent to {recipient_email}")
     except Exception as e:
         print(f"Failed to send email: {e}")
-        raise e
     
 @user_router.put("/{user_id}")
 def update_user(user_id: int, user_data: UserCreate, db: Session = Depends(get_db)):
