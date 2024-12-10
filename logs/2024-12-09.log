@@ -18,3 +18,5 @@
 2024-12-09 18:15:39 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 230.73ms
 2024-12-09 18:24:57 - INFO - Request started - Method: POST Path: /users/login/google
 2024-12-09 18:24:58 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 953.12ms
+2024-12-09 18:40:34 - INFO - Request started - Method: POST Path: /users/login/google
+2024-12-09 18:40:39 - INFO - Request completed - Method: POST Path: /users/login/google Status: 200 Duration: 4362.90ms
